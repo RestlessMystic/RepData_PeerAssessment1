@@ -230,13 +230,46 @@ print(m)
 
 <pre><code class="r">steps.mean &lt;- mean(sumvec, na.rm = TRUE)
 steps.median &lt;- median(sumvec, na.rm = TRUE)
-print(paste(&quot;Mean is &quot;, steps.mean, &quot; and median is &quot;, steps.median))
+print(paste(&quot;Mean is &quot;, steps.mean, &quot; and Median is &quot;, steps.median))
 </code></pre>
 
-<pre><code>## [1] &quot;Mean is  10766.1886792453  and median is  10765&quot;
+<pre><code>## [1] &quot;Mean is  10766.1886792453  and Median is  10765&quot;
 </code></pre>
 
 <h2>What is the average daily activity pattern?</h2>
+
+<blockquote>
+<p>Preparing Data</p>
+</blockquote>
+
+<pre><code class="r">new.df &lt;- NULL
+it &lt;- unique(data$interval)
+for(i in 1:length(it))
+{
+  new.df &lt;- rbind.data.frame(new.df, c(it[i], mean(data$steps[data$interval == it[i]], na.rm = TRUE)))
+
+}
+colnames(new.df) &lt;- c(&quot;Interval&quot;, &quot;Average&quot;) 
+</code></pre>
+
+<blockquote>
+<p>Plotting Data</p>
+</blockquote>
+
+<pre><code class="r">plot(new.df, type=&quot;l&quot;)
+</code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAAeFBMVEX9/v0AAAAAADkAAGUAOTkAOWUAOY8AZrU5AAA5ADk5AGU5OWU5OY85ZrU5j9plAABlADllAGVlOQBltf2POQCPOTmPOWWPZgCPtY+P29qP2/21ZgC1/rW1/v3ajzna24/a/rXa/tra/v39tWX924/9/rX9/tr9/v0DLCe5AAAAKHRSTlP///////////////////////////////////////////////////8AvqouGAAAAAlwSFlzAAALEgAACxIB0t1+/AAAD+xJREFUeJztnQ17ozYWRqvM7iQ7myYzdabbJpu0m9jm///DDdjYfEhYIAmE33OeGX9guLrWASQRwL8UIMkvSycAy4B4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4UULEG8iZhOIDloXUIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFH0xGea1twgXpRg8du76o98X17Hhl6KTNOam1Dx+6dN9fzx9X1k6KXINK25CRW/+/HaevYPvRSZpjU3bPGiBLfxu0fa+DVCr14UxIsiOJzLNK+ZEezcZZrXzCQYznmeub0UueY1M2zxoggO5zLNa2YEe/WZ5jUziBclxnDu5nlVx+ozzWtmYnTu9k8PiF8bcYZzL7eIXxmRhnNv//iG+FURYTj3UD699cdzmVYw4ivo1YuCeFEQL4qceJNpXnODeFEQLwriRUG8KIgXBfGiIF4UQfGZJjYziBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aIgXhTEi6IoPtPM5gXxoiBeFMSLgnhREC+KmniD+AOIFwXxoiBeFMSLgnhREC8K4kWRE396EAfxokiKzzO1eRETbxB/BPGiIF4UxIuiKT7L3OYF8aIgXhTEi4J4UUTFZ5ncrCBeFMSLgnhREC+Kqvgss5uTYPHbO1Py5XVs6EVAfE2o+P3Tpnr++Po+MvQiGMsrTULF7368tp79Qy8C4mtkt/gs05uR4DZ+97iqNt76UhG1Xr31pSKIFyVG567c2/eb+CxrFvE1EcRXHfrtr2NDL4JxvNYjgvjt/XtrOGdqwrOLDuJrgsU/3vz5e7nF369tOJdlfvMR3rnbP5nb4mN9w7ks85sP3V59lvnNh7D4LBOcDcSLgnhRwnv1x7Fbv3eXY70iviZ4i98/PUwLvQiIrwnf1e++P08KvQhm4J0Wym18lhnOhZZ4M/hWCsSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kXxE79/Ml//dt2efGLoJeimlGGKc+Elfv/0sL1/t/xSeEjoJUD8CS/xh5+TbPyYZIzQS4D4EyO2+De2+CvCu423/mB0SOglQPwJ6V59jinOBeJF8evcPbp+Wy4g9BIg/oTfFv9S/rbc2+24AV2GtYr4E77Duerxv6MGdBnWKuJP+A7nPh/fvv51zxZ/LXh27l4+W/jb3eMmYuglQPwJevWiIF4UP/FvE0ZzOdZqL6UMc5wJv1799+eP28/hXNTQS4D4E77DucO/mKGXAPEn/IZzP58//22/If568GvjP51/GPNgm2N752r/M6zUfkoZJjkPob36/dNhbG85mpthnSL+xIhDtlbqjyyzZFiniD/h28a7ZmCLXylj/ixrHce7P8uwThF/QvvIXZZJzgPiFyp4aYIvqGA4N63gpQm9oILO3cSClyb0ggrLcM7UxMsyFkuJz7AuQi+oWPsWP0+Wo8Wnzyr4goo1DedsGSHeynX16hHvXQLi4xS8UvG7x7HXzXmEXgDEe5dQb/HlaP02bugFQLx3Cc1d/YftWH19dZWld4f4cyGrFe/e4g8XW0wIvQCI9y7Bo43fue6Nc43iJ36ntYpPEnoBEO9dQkP82/rPq0e8dwm1+A9jbkbe7ew6xU/7UisV/9mzu3l+GXXBpEfoBViNeJO+8jzEH/7whvhqbiXx1Vh9g/hiupCVii95oY0vJgsZvVhG4ssjNfTqJcXHDr0AiG8WMQjiOzMjPjj0AiC+WcQgiO/MjPjg0AuA+GYRgyC+MzPig0MvwJrEp649xI8LkF68qf+nvSQF8eMCzCe+ep3OPeLHBZhXfMJKRPy4AIgPDr0AiG8XMwDiOzNPFD9iOcTHB/HtYgZAfGfmucUnq0V58aPSRHyE0AuwoHjvBU1nLUF8BBDvHRfxnXkTiG9/gvgEIN47LuK78075ViPFG8RHZknx7gURnxzEe8dFfHfe6OIN4pOTrXjTeov42GQgvr844tOzkHjTePISPzW9CUm5uCrx9vOYFhffPjqA+PisRHynsze+vDFJuUB8d97k4rvDu/HljUnKxTWJd5yyOpt4xwE8xKcG8SPiXpX4hXv1iJ+Zc70j3jvuFYl3SUO8DcR35w0QXy3eWx7xqTCtJ9fHvqEQHxp6NlKIH/XdLoo3iE/BBVWIt4H47ryJxfcaE8RPJh/xhe1OF4hPRRLxI5c6vUL8fJjTg/tj/1CIDw2dAvdAPWfxBeJDsYs3rk/cy7hnDRLf67MXiI9CWvGNXQfip4dOgVP8QC7eaTY7iYifHjoFKcWb5tPou9q4i0N8BBKKN63nUcfXEJ+cdOJN+0VP/FAUxCfHJd5by+WZXFu896rVXUcQH4FU4k33pWVX7ztusIjvrVcj05vCVYl3nE2JeAuInyi+33I7AyE+NS7x/n3uy/O4xTsjIT419k37wpg7VLxpTfUooLPGID4cm2ITWfxJlEW8o3M59N509hWIn1aiXfyFhXwCt1/PKD5VNV63eIN4F4ifKr4p21jmcxZwJeK3d+Wv5hjLDw5nIf7CWK6IIv7cUbd3Lgfer1b8/unwu/IfX99Hhk5AuHjHvIjvsfvx2nr2D52AXg8+kvjeLIjPb4vvVCviHQS38bvHvNr4ucWb0eKbE0yxWvGTQyfAIn5kr9517K/zxpwnI/4csmZSQiHYxF88Pe6ieMv9xyKK70xZjfiyU1fu7ftN/DJbfPuU2upNYvGFiSjesny+4qsO/fbXsaETcBJvThNmF++xyV6L+O39ezbDufok+kaFXkoD8TYui3+8+fP3cou/z2I41xbf6Tg5F2q+QXyFR+du/2Rui49MhnOny2bOzseKt3hyiC/qlaxpUkf81NAJMJb/M4hvfmy9KLI/xbQ/RHwYXeETxFtGoZ1JMcQf5zKmO49TfPTKRPwC4o/nW/V3+YifVlBLfL2LHine0iQnEG8L6krW61uM5vrEm9ZgbsTS1ZtI4i0bc3uezlTETyqoWW2jjxV7iO8tcC7QFDbxtr24O2CB+IkFZSS+1mTaEwYDFoifWFBe4k1LvK27hvg4dI7QRhZv6a2drfb//Ocj3j0J8eMKyk/85QGadRLiRxZ0rpx+j/ny0ueXAx3u5lytDyOKt2aO+IGCMhJvpou3J27GfycPEB8kvnofSbyribL0ICNwJeJP/8cXfPZYH0rtR3cscFqs9c60svEW78wa8UMFrUn8YBKOzxDvKChX8Z65DHlF/GBBkztAqcSP6o0jfnJBIeLrjTOK+FZf09fX0GyIHyzousVfvCxkNFcjfnLdRBbfWAVHrIuIn17Q5LoxZ/G2Znm0+NMMk3dCvXCXrwCcEHWQFYmf3AyGiu/NgfiZiCP+tJePKD5KFXTER6pWxKcTH6krbhpDxFNpwZGvSHxgG98U3zyboy++L7r7HvGzECq+aIuvO/fG2uQjPjR0PAILagziOm1zqPiYbTzioxfkFt/YCzTnX0Z8a21EfISChsX3g48QH4WuePt+aHzUQdYgPrScseItom0Bo4H4ROX0xTd79PmIb2WH+Bjii/Mhl+oxL/Gd8QXiY5WzAvGd/ZE9rZFBhz8WE9+NaD9JPwPx4UcIEH9B/IQEUok/6o/zZ1rEI96GinhXjEm71ATi68AF4qOWsxLxh3GnMYiPVU7m4luvjn070/90YlAr8uInRUP8LMQQHzV2OvF1RxTxkcqJKz72SfCIT1ZObPGTE7kUziY+SY4i4iOTWHyB+FnL8SdhRqejt6Y9YUKgQRA/hTnE14UgPiNSZmQ6rxCfETNl1NnpT1jYDeKnMOc31xWfn/f5Uur/YXHMokMgPm86t9gas+Twx4jPHMQLM+lHPRG/fhAvCuJFQbwoiBdl0h1yEL9+NMXjfdpAHvHrB/Gi9MV7VAri109PvE8vH/HrpyPe71paxK8fU7RPyPTq5CP+OkC8KO1T8RAvA+JFQbwqpvmiVyn9WlqbeI+vpIlpPlfyjeXToSktMhTfOVaRopA10hffuPm6ZWC/QvHG/kYci/jqlTk/Wud3kJd40xUf/6daVstp4z4+tNv8JcV7djqGI7YuDU/xq1wrxrR+5LIp3lZNweK3d2WB5svrpdCmk9AhV8sCtmlFcbrbk2mv3NDkfNfbtvjRm9xF8funTfX88fX9UuiDtlYL3T3UeMy9eX8vU08rGtZNih/kuiZMt14v/oJSh4vidz9eW8/F0ZzpnwF4kld/XL1vUJwXa4RorQf99QRstCqq8did6iTmFg85EdzG7x4923jIilUN5yAeiBcF8aIgXhTEi4J4URAvCuJFQbwoiBcF8aKkFA85k058dz2IFypRQMkUHSA+r4CITxFQMkUHiM8rIOJTBJRM0QHi8wqI+BQBJVN0EFE8rAnEi4J4URAvCuJFQbwoiBcF8aIgXhTEixJL/O7R9K+jnsSbqS7NPQaMEHf77bXohAuLWgWMmGZ5z5FN3BQvE0l8eRX9222UUC+bRsAIcT9KP+1wYVGrgBHT3H1/Lrb/eo6ZogeRxJf3y6g2hGD2P58bAcPjvtz88bl8O1xQ1EPAiGl+3JZRNxFT9CGS+O39e7XmhlPdh2FTB4wRt6y/drjAqGXAyGn2cotXoQ4iiS9vlBInz8+dXrk5HQPGiFt6aocLjFqtSVHT3D89xE3xMtlt8RUvm9y3+Khp7h4firgpXia7Nr6i2+IFBdvGbeNb4qME3N6VHcV1tvHlvipOJ7Tcx+1/fz0GjBG3rL92uMCoddsRKc2D97gpXibLcfzNc8zhbLJxfKQ036rrXjbrHMfD2kC8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiiIo/n7nsPoc56dnNi4N4xCvxKXV7/x9jNrtH8+W1eii2//6tPKN5//P5cN0y4q+QUvxddb1aqfelunhhe7cpr4Hd3v9dXrf8OQPir4+j18NTeY3a7kc14e2h/FcU9fvrBfHfXqtLnm+eDxdX/q+88P2lvNsF4q+Qtvgfr8dpnw38H/fvu8cNu/orpSW+bOOPrX3xZh7q698Rf4Wcxe+fql79zfOhF1/e8KC8jPGfv20QD1cI4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kX5P2oAFfXugfyrAAAAAElFTkSuQmCC" alt="plot of chunk unnamed-chunk-7"/> </p>
+
+<blockquote>
+<p>Maximum Activity</p>
+</blockquote>
+
+<pre><code class="r">print(paste(&quot;Maximum Activity happens at&quot;, new.df$Interval[new.df$Average == max(new.df$Average)], &quot;with value &quot;, max(new.df$Average)))
+</code></pre>
+
+<pre><code>## [1] &quot;Maximum Activity happens at 835 with value  206.169811320755&quot;
+</code></pre>
 
 <h2>Imputing missing values</h2>
 

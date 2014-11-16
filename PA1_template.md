@@ -49,16 +49,41 @@ print(m)
 ```r
 steps.mean <- mean(sumvec, na.rm = TRUE)
 steps.median <- median(sumvec, na.rm = TRUE)
-print(paste("Mean is ", steps.mean, " and median is ", steps.median))
+print(paste("Mean is ", steps.mean, " and Median is ", steps.median))
 ```
 
 ```
-## [1] "Mean is  10766.1886792453  and median is  10765"
+## [1] "Mean is  10766.1886792453  and Median is  10765"
 ```
 ## What is the average daily activity pattern?
+>Preparing Data
 
+```r
+new.df <- NULL
+it <- unique(data$interval)
+for(i in 1:length(it))
+{
+  new.df <- rbind.data.frame(new.df, c(it[i], mean(data$steps[data$interval == it[i]], na.rm = TRUE)))
+  
+}
+colnames(new.df) <- c("Interval", "Average") 
+```
+>Plotting Data
 
+```r
+plot(new.df, type="l")
+```
 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+>Maximum Activity
+
+```r
+print(paste("Maximum Activity happens at", new.df$Interval[new.df$Average == max(new.df$Average)], "with value ", max(new.df$Average)))
+```
+
+```
+## [1] "Maximum Activity happens at 835 with value  206.169811320755"
+```
 ## Imputing missing values
 
 

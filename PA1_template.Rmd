@@ -37,9 +37,25 @@ steps.median <- median(sumvec, na.rm = TRUE)
 print(paste("Mean is ", steps.mean, " and Median is ", steps.median))
 ```
 ## What is the average daily activity pattern?
-
-
-
+>Preparing Data
+```{r}
+new.df <- NULL
+it <- unique(data$interval)
+for(i in 1:length(it))
+{
+  new.df <- rbind.data.frame(new.df, c(it[i], mean(data$steps[data$interval == it[i]], na.rm = TRUE)))
+  
+}
+colnames(new.df) <- c("Interval", "Average") 
+```
+>Plotting Data
+```{r}
+plot(new.df, type="l")
+```
+>Maximum Activity
+```{r}
+print(paste("Maximum Activity happens at", new.df$Interval[new.df$Average == max(new.df$Average)], "with value ", max(new.df$Average)))
+```
 ## Imputing missing values
 
 
