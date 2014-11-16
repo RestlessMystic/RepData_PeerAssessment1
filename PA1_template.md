@@ -11,10 +11,7 @@ output:
 
 ```r
 library("ggplot2")
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 3.0.3
+library("fields")
 ```
 >Reading Data
 
@@ -37,10 +34,6 @@ m <- ggplot(new.df, aes(x=day, y = steps)) +
       geom_histogram(stat = "identity") + theme(text = element_text(size=10),
        axis.text.x = element_text(angle=90, vjust=1)) 
 print(m)
-```
-
-```
-## Warning: Removed 8 rows containing missing values (position_stack).
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
@@ -107,17 +100,6 @@ for(i in 1:nrow(data2))
     data2$steps[i] <- round(new.df$Average[new.df$Interval == data2$interval[i]])
   }
 }
-head(data2)
-```
-
-```
-##   steps       date interval
-## 1     2 2012-10-01        0
-## 2     0 2012-10-01        5
-## 3     0 2012-10-01       10
-## 4     0 2012-10-01       15
-## 5     0 2012-10-01       20
-## 6     2 2012-10-01       25
 ```
 
 >Preparing Histogram, and calculating mean and median
@@ -145,4 +127,52 @@ print(paste("Mean is ", steps2.mean, " and Median is ", steps2.median))
 ## [1] "Mean is  10765.6393442623  and Median is  10762"
 ```
 Mean and Median changed upon filling the missing values. There was considerable change in the median and slight change in mean.
+
+
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```r
+newvec <- numeric(0)
+j = 0
+for(i in 1:nrow(data))
+{
+  if(weekdays(strptime(data$date[i], "%Y-%m-%d"))=="Saturday" | weekdays(strptime(data$date[i], "%Y-%m-%d"))=="Sunday")
+  {
+    newvec[i] = 2
+  }
+  else
+  {
+    newvec[i] = 1
+  }
+    
+}
+
+data3 <- cbind.data.frame(data, newvec)
+
+data.week <- data3[data3$newvec == 1,]
+data.end <- data3[data3$newvec == 2,]
+week.df <- NULL
+end.df <- NULL
+it <- unique(data$interval)
+for(i in 1:length(it))
+{
+  week.df <- rbind.data.frame(week.df, c(it[i], mean(data.week$steps[data.week$interval == it[i]], na.rm = TRUE)))
+  end.df <- rbind.data.frame(end.df, c(it[i], mean(data.end$steps[data.end$interval == it[i]], na.rm = TRUE)))
+  
+}
+colnames(week.df) <- c("Interval", "Average") 
+colnames(end.df) <- c("Interval", "Average") 
+set.panel(2,1)
+```
+
+```
+## plot window will lay out plots in a 2 by 1 matrix
+```
+
+```r
+plot(week.df, type="l")
+plot(end.df, type="l")
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 
