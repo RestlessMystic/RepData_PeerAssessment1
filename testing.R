@@ -12,8 +12,14 @@ for(i in 1:length(it))
 }
 colnames(new.df) <- c("Interval", "Average") 
   
-
-
+for(i in 1:nrow(data2))
+{
+  if(is.na(data2$steps[i]))
+  {
+    data2$steps[i] <- round(new.df$Average[new.df$Interval == data2$interval[i]])
+  }
+}
+  
 
 #sumvec <- rowsum(data$steps, data$date)
 #new.df <- cbind.data.frame(rownames(sumvec), sumvec)

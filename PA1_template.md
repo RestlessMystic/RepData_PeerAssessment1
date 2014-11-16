@@ -84,8 +84,65 @@ print(paste("Maximum Activity happens at", new.df$Interval[new.df$Average == max
 ```
 ## [1] "Maximum Activity happens at 835 with value  206.169811320755"
 ```
-## Imputing missing values
+## Inputing missing values
+>Missing Values
 
+```r
+print(paste("Number of Missing Values : ", nrow(data[is.na(data$steps),])))
+```
 
+```
+## [1] "Number of Missing Values :  2304"
+```
+>Substituting Values.
 
+The average value of each interval has been substituted for each NA case, rounded off to integer using R's round() function.
+
+```r
+data2 <- data
+for(i in 1:nrow(data2))
+{
+  if(is.na(data2$steps[i]))
+  {
+    data2$steps[i] <- round(new.df$Average[new.df$Interval == data2$interval[i]])
+  }
+}
+head(data2)
+```
+
+```
+##   steps       date interval
+## 1     2 2012-10-01        0
+## 2     0 2012-10-01        5
+## 3     0 2012-10-01       10
+## 4     0 2012-10-01       15
+## 5     0 2012-10-01       20
+## 6     2 2012-10-01       25
+```
+
+>Preparing Histogram, and calculating mean and median
+
+```r
+sumvec2 <- rowsum(data2$steps, data2$date)
+new2.df <- cbind.data.frame(rownames(sumvec2), sumvec2)
+colnames(new2.df) <- c("day", "steps")
+
+m2 <- ggplot(new2.df, aes(x=day, y = steps)) + 
+      geom_histogram(stat = "identity") + theme(text = element_text(size=10),
+       axis.text.x = element_text(angle=90, vjust=1)) 
+print(m2)
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
+
+```r
+steps2.mean <- mean(sumvec2, na.rm = TRUE)
+steps2.median <- median(sumvec2, na.rm = TRUE)
+print(paste("Mean is ", steps2.mean, " and Median is ", steps2.median))
+```
+
+```
+## [1] "Mean is  10765.6393442623  and Median is  10762"
+```
+Mean and Median changed upon filling the missing values. There was considerable change in the median and slight change in mean.
 ## Are there differences in activity patterns between weekdays and weekends?
